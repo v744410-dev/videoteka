@@ -27,7 +27,9 @@ def add_movie():
         "director": data.get('director'),
         "year": data.get('year'),
         "genre": data.get('genre'),
-        "rating": data.get('rating')
+        "rating": data.get('rating'),
+        "description": data.get('description', 'Описание отсутствует'),
+        "poster": data.get('poster', '')
     }
     movies.append(movie)
     next_id += 1
