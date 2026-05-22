@@ -10,16 +10,37 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 100px 120px 20px 120px;
+            padding: 120px 120px 20px 120px;
+        }
+        
+        /* ВЕРХНЯЯ ПОЛОСА С 3 КАДРАМИ */
+        .top-film-strip {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: #000;
+            display: flex;
+            z-index: 100;
+            gap: 2px;
+            overflow: hidden;
+        }
+        
+        .film-frame {
+            flex: 1;
+            height: 100px;
+            background-size: cover;
+            background-position: center;
         }
         
         /* ЛЕВАЯ ПОЛОСА С КАДРАМИ */
         .left-film-strip {
             position: fixed;
             left: 0;
-            top: 0;
+            top: 100px;
             width: 100px;
-            height: 100vh;
+            height: calc(100vh - 100px);
             background: #000;
             display: flex;
             flex-direction: column;
@@ -32,9 +53,9 @@
         .right-film-strip {
             position: fixed;
             right: 0;
-            top: 0;
+            top: 100px;
             width: 100px;
-            height: 100vh;
+            height: calc(100vh - 100px);
             background: #000;
             display: flex;
             flex-direction: column;
@@ -49,20 +70,6 @@
             background-size: cover;
             background-position: center;
             flex-shrink: 0;
-        }
-        
-        /* КАДРЫ ВМЕСТО ВЕРХНЕЙ ПОЛОСЫ (фон) */
-        .top-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            z-index: 99;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.6;
         }
         
         .container {
@@ -323,13 +330,13 @@
 </head>
 <body>
 
-    <!-- ФОН ВМЕСТО ВЕРХНЕЙ ПОЛОСЫ (случайный кадр) -->
-    <div class="top-bg" id="topBg"></div>
+    <!-- ВЕРХНЯЯ ПОЛОСА С 3 КАДРАМИ -->
+    <div class="top-film-strip" id="topStrip"></div>
 
-    <!-- ЛЕВАЯ ПОЛОСА С КАДРАМИ -->
+    <!-- ЛЕВАЯ ПОЛОСА -->
     <div class="left-film-strip" id="leftStrip"></div>
 
-    <!-- ПРАВАЯ ПОЛОСА С КАДРАМИ -->
+    <!-- ПРАВАЯ ПОЛОСА -->
     <div class="right-film-strip" id="rightStrip"></div>
 
     <div class="container">
@@ -338,7 +345,7 @@
             <p>Справочно-информационная система фильмов</p>
         </div>
 
-        <!-- ФОРМА ДОБАВЛЕНИЯ (ОДНА КНОПКА ВНИЗУ) -->
+        <!-- ФОРМА ДОБАВЛЕНИЯ (только одна кнопка внизу) -->
         <div class="add-form">
             <h2>➕ Добавить фильм</h2>
             
@@ -430,7 +437,7 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-        // 16 КАДРОВ ДЛЯ ЛЕВОЙ И ПРАВОЙ ПОЛОСЫ
+        // 16 КАДРОВ
         const filmFrames = [
             'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',
             'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',
@@ -450,32 +457,39 @@
             'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13'
         ];
 
-        // Заполняем левую и правую полосы
+        // Заполняем все полосы
         function initFilmStrips() {
+            const topStrip = document.getElementById('topStrip');
             const leftStrip = document.getElementById('leftStrip');
             const rightStrip = document.getElementById('rightStrip');
+            
+            topStrip.innerHTML = '';
             leftStrip.innerHTML = '';
             rightStrip.innerHTML = '';
 
-            for (let i = 0; i < 8; i++) {
-                let f = document.createElement('div');
-                f.className = 'vertical-frame';
-                f.style.backgroundImage = `url(${filmFrames[i]})`;
-                leftStrip.appendChild(f);
+            // Верхняя полоса: 3 разных кадра
+            for (let i = 0; i < 3; i++) {
+                const frame = document.createElement('div');
+                frame.className = 'film-frame';
+                frame.style.backgroundImage = `url(${filmFrames[i]})`;
+                topStrip.appendChild(frame);
             }
 
-            for (let i = 8; i < 16; i++) {
-                let f = document.createElement('div');
-                f.className = 'vertical-frame';
-                f.style.backgroundImage = `url(${filmFrames[i]})`;
-                rightStrip.appendChild(f);
+            // Левая полоса: 6 кадров
+            for (let i = 3; i < 9; i++) {
+                const frame = document.createElement('div');
+                frame.className = 'vertical-frame';
+                frame.style.backgroundImage = `url(${filmFrames[i]})`;
+                leftStrip.appendChild(frame);
             }
-        }
 
-        // Случайный кадр для верхнего фона
-        function setTopBg() {
-            const randomFrame = filmFrames[Math.floor(Math.random() * filmFrames.length)];
-            document.getElementById('topBg').style.backgroundImage = `url(${randomFrame})`;
+            // Правая полоса: 7 кадров
+            for (let i = 9; i < 16; i++) {
+                const frame = document.createElement('div');
+                frame.className = 'vertical-frame';
+                frame.style.backgroundImage = `url(${filmFrames[i]})`;
+                rightStrip.appendChild(frame);
+            }
         }
 
         async function loadMovies() {
@@ -582,7 +596,6 @@
         }
 
         initFilmStrips();
-        setTopBg();
         loadMovies();
     </script>
 </body>
