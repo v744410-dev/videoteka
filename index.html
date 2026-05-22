@@ -76,19 +76,32 @@
         }
         .movie-poster {
             height: 200px;
-            background-size: cover;
-            background-position: center;
-            background-color: #667eea;
             position: relative;
+            background-color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .movie-poster .no-poster {
+            font-size: 50px;
+            color: white;
         }
         .movie-rating {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: black;
+            background: rgba(0,0,0,0.8);
             color: gold;
             padding: 5px 10px;
             border-radius: 20px;
+            font-size: 14px;
+            z-index: 2;
         }
         .movie-content {
             padding: 15px;
@@ -130,38 +143,53 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
         }
         .modal-content {
             background: white;
-            margin: 50px auto;
-            max-width: 500px;
+            margin: 30px auto;
+            max-width: 550px;
+            width: 90%;
             border-radius: 20px;
             overflow: hidden;
         }
         .modal-poster {
-            height: 300px;
-            background-size: cover;
-            background-position: center;
+            height: 350px;
+            background-color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .modal-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #1a1a2e;
+        }
+        .modal-poster .no-poster {
+            font-size: 80px;
+            color: white;
         }
         .modal-body {
             padding: 20px;
         }
         .modal-close {
-            float: right;
-            font-size: 28px;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 35px;
             cursor: pointer;
             color: white;
             background: rgba(0,0,0,0.5);
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            top: -310px;
-            left: 10px;
+            z-index: 10;
         }
         .stats {
             margin-top: 10px;
@@ -173,6 +201,19 @@
             padding: 50px;
             background: white;
             border-radius: 15px;
+        }
+        .test-posters {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        .test-posters a {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -196,8 +237,16 @@
                 <input type="number" id="rating" step="0.1" placeholder="Рейтинг">
             </div>
             <textarea id="description" rows="2" placeholder="Описание"></textarea>
-            <input type="text" id="poster" placeholder="Ссылка на постер (необязательно)">
+            <input type="text" id="poster" placeholder="Ссылка на постер (URL картинки)">
             <button onclick="addMovie()">Добавить фильм</button>
+            
+            <div class="test-posters">
+                📸 <strong>Готовые ссылки для теста (нажмите, чтобы вставить):</strong><br>
+                <a onclick="document.getElementById('poster').value='https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'">Побег из Шоушенка</a>
+                <a onclick="document.getElementById('poster').value='https://image.tmdb.org/t/p/w500/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg'">Крестный отец</a>
+                <a onclick="document.getElementById('poster').value='https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg'">Темный рыцарь</a>
+                <a onclick="document.getElementById('poster').value='https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg'">Матрица</a>
+            </div>
         </div>
 
         <div class="search-section">
@@ -265,8 +314,9 @@
             }
             container.innerHTML = movies.map(m => `
                 <div class="movie-card" onclick="openModal(${m.id})">
-                    <div class="movie-poster" style="background-image: url('${m.poster || ''}'); background-color: ${m.poster ? '' : '#667eea'}">
-                        ${!m.poster ? '<div style="font-size: 50px; text-align: center; line-height: 200px;">🎬</div>' : ''}
+                    <div class="movie-poster">
+                        ${m.poster ? `<img src="${m.poster}" onerror="this.style.display='none'; this.nextSibling.style.display='flex'" loading="lazy">` : ''}
+                        <div class="no-poster" style="${m.poster ? 'display: none;' : 'display: flex;'}">🎬</div>
                         <div class="movie-rating">⭐ ${m.rating}</div>
                     </div>
                     <div class="movie-content">
@@ -283,7 +333,6 @@
             `).join('');
         }
 
-        // Функция открытия карточки - ГЛАВНОЕ!
         window.openModal = function(movieId) {
             const movie = allMovies.find(m => m.id === movieId);
             if (!movie) return;
@@ -297,14 +346,9 @@
             
             const posterEl = document.getElementById('modalPoster');
             if (movie.poster) {
-                posterEl.style.backgroundImage = `url('${movie.poster}')`;
-                posterEl.style.backgroundSize = 'cover';
-                posterEl.style.backgroundPosition = 'center';
-                posterEl.innerHTML = '';
+                posterEl.innerHTML = `<img src="${movie.poster}" onerror="this.style.display='none'; this.nextSibling.style.display='flex'" loading="lazy"><div class="no-poster" style="display: none;">🎬</div>`;
             } else {
-                posterEl.style.backgroundImage = 'none';
-                posterEl.style.backgroundColor = '#667eea';
-                posterEl.innerHTML = '<div style="font-size: 60px; text-align: center; line-height: 300px;">🎬</div>';
+                posterEl.innerHTML = `<div class="no-poster" style="display: flex;">🎬</div>`;
             }
             
             document.getElementById('modal').style.display = 'block';
