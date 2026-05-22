@@ -2,7 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Видеотека</title>
+    <title>Видеотека - Справочная система фильмов</title>
+    
+    <!-- ИКОНКА НА ВКЛАДКЕ (favicon) -->
+    <link rel="icon" type="image/png" href="https://v744410-dev.github.io/videoteka/images/favicon.png">
+    <link rel="shortcut icon" href="https://v744410-dev.github.io/videoteka/images/favicon.ico">
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -28,12 +33,17 @@
             z-index: 100;
         }
         .vertical-frame { min-height: 150px; width: 100%; background-size: cover; background-position: center; }
+        
+        /* ЛОГОТИП В ПРАВОМ ВЕРХНЕМ УГЛУ */
         .top-right-frame {
             position: fixed; top: 10px; right: 20px; z-index: 200;
-            width: 100px; height: 80px; border-radius: 10px;
+            width: 80px; height: 80px; border-radius: 15px;
             background-size: cover; background-position: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             border: 2px solid rgba(255,255,255,0.5);
+            background-color: #000;
         }
+        
         .container { max-width: 1200px; margin: 0 auto; }
         .header { text-align: center; color: white; margin-bottom: 30px; }
         .header h1 { font-size: 2.5em; }
@@ -72,7 +82,9 @@
     </style>
 </head>
 <body>
-    <div class="top-right-frame" style="background-image: url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=150&h=100&fit=crop');"></div>
+    <!-- ЛОГОТИП В ПРАВОМ ВЕРХНЕМ УГЛУ (ЗАМЕНИТЕ НА СВОЮ КАРТИНКУ) -->
+    <div class="top-right-frame" style="background-image: url('https://v744410-dev.github.io/videoteka/images/logo.png');"></div>
+    
     <div class="top-film-strip" id="topStrip"></div>
     <div class="left-film-strip" id="leftStrip"></div>
     <div class="right-film-strip" id="rightStrip"></div>
