@@ -16,7 +16,6 @@
             min-height: 100vh;
         }
 
-        /* Контейнер с отступами для полос */
         .page-wrapper {
             display: flex;
             flex-direction: column;
@@ -27,7 +26,6 @@
             padding-bottom: 20px;
         }
 
-        /* Верхняя полоса с кадрами */
         .top-film-strip {
             position: fixed;
             top: 0;
@@ -49,7 +47,6 @@
             flex-shrink: 0;
         }
 
-        /* Левая полоса */
         .left-film-strip {
             position: fixed;
             left: 0;
@@ -64,7 +61,6 @@
             overflow: hidden;
         }
 
-        /* Правая полоса */
         .right-film-strip {
             position: fixed;
             right: 0;
@@ -87,7 +83,6 @@
             flex-shrink: 0;
         }
 
-        /* Основной контент */
         .main-content {
             flex: 1;
             overflow-y: auto;
@@ -112,7 +107,6 @@
             margin-bottom: 10px;
         }
 
-        /* Форма добавления */
         .add-form {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -177,7 +171,6 @@
             width: 100%;
         }
 
-        /* Поиск */
         .search-section {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -206,7 +199,6 @@
             border-top: 1px solid #eee;
         }
 
-        /* Сетка фильмов */
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -270,6 +262,14 @@
             margin-right: 5px;
         }
 
+        .movie-description {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
         .btn-delete {
             background: #ff4757;
             color: white;
@@ -281,7 +281,6 @@
             margin-top: 10px;
         }
 
-        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -330,16 +329,10 @@
 </head>
 <body>
 
-    <!-- Верхняя полоса с кадрами -->
     <div class="top-film-strip" id="topStrip"></div>
-
-    <!-- Левая полоса -->
     <div class="left-film-strip" id="leftStrip"></div>
-
-    <!-- Правая полоса -->
     <div class="right-film-strip" id="rightStrip"></div>
 
-    <!-- Основной контент -->
     <div class="page-wrapper">
         <div class="main-content">
             <div class="container">
@@ -348,7 +341,6 @@
                     <p>Справочно-информационная система фильмов</p>
                 </div>
 
-                <!-- ФОРМА ДОБАВЛЕНИЯ (исправлено расположение) -->
                 <div class="add-form">
                     <h2>➕ Добавить фильм</h2>
                     
@@ -360,12 +352,8 @@
                         <div class="field">
                             <label>🎭 Жанр</label>
                             <select id="genre">
-                                <option>Боевик</option>
-                                <option>Комедия</option>
-                                <option>Драма</option>
-                                <option>Фантастика</option>
-                                <option>Ужасы</option>
-                                <option>Триллер</option>
+                                <option>Боевик</option><option>Комедия</option><option>Драма</option>
+                                <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
                             </select>
                         </div>
                     </div>
@@ -388,7 +376,7 @@
                     <div class="form-row">
                         <div class="field-full">
                             <label>📝 Описание</label>
-                            <textarea id="description" rows="2" placeholder="Краткое описание фильма..."></textarea>
+                            <textarea id="description" rows="3" placeholder="Краткое описание фильма..."></textarea>
                         </div>
                     </div>
 
@@ -402,24 +390,18 @@
                     <button class="btn-add" onclick="addMovie()">➕ Добавить фильм</button>
                 </div>
 
-                <!-- ПОИСК -->
                 <div class="search-section">
                     <div class="search-row">
                         <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." onkeyup="filterMovies()">
                         <select id="genreFilter" onchange="filterMovies()">
                             <option value="">Все жанры</option>
-                            <option>Боевик</option>
-                            <option>Комедия</option>
-                            <option>Драма</option>
-                            <option>Фантастика</option>
-                            <option>Ужасы</option>
-                            <option>Триллер</option>
+                            <option>Боевик</option><option>Комедия</option><option>Драма</option>
+                            <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
                         </select>
                     </div>
                     <div class="stats" id="stats">Фильмов: 0</div>
                 </div>
 
-                <!-- СПИСОК ФИЛЬМОВ -->
                 <div id="moviesContainer" class="movies-grid">
                     <div class="empty-state">🎬 Нет фильмов. Добавьте первый!</div>
                 </div>
@@ -427,7 +409,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно -->
     <div id="modal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div id="modalPoster" class="modal-poster"></div>
@@ -445,14 +426,24 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-        // КАДРЫ ДЛЯ ФОНА (замените на свои ссылки)
+        // ВСЕ КАРТИНКИ РАЗНЫЕ (16 штук, без повторов)
         const filmFrames = [
             'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',
-            'https://avatars.mds.yandex.net/i?id=56056d698fc7560e819dbbbaaf58031f3d97013f-9869575-images-thumbs&n=13',
-            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300',
-            'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=300',
-            'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300',
-            'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=300'
+            'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=623b262a6b221380f876abbe09a4f45c842a8dad-5305065-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=0ae8e10a3b6a0dffdd8ce0b8b1c05fc204cb6eba-6696526-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=1f33f3395ee796d2dac5ae305510a1ac768c26dd-12317703-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=b5c523e3b0266dc12d39edb28200e6b47954af66-4011331-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=ba318a2b7ea7f5e1ddc3b58bc8a75b152980bd32-10931180-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=b7eca7f82283c7c7af0f2424db2a2d7e17f912de-5285455-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=76263f6d51d1aa67ee4c45d3c94417e4127e73e0-5151070-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=d9bdf06741dbedbfee43d7b11f3afade7d5311bb-9837641-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=b43f7201ae9fbfd12a3e98036be9bb69d0c4beed-10695547-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=831b84b9973950da4fc4998974453ff5e868b73d-5383195-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=dd2e873ac46653546fffa698fd2dd518f5f61811-4935575-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=76040f89ff5a5107f6e214b127f1f65defc8117e-7716570-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=1b3ea959cae5b2398431e9256a049d728f9308de-3910933-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13'
         ];
 
         function initFilmStrips() {
@@ -464,24 +455,27 @@
             leftStrip.innerHTML = '';
             rightStrip.innerHTML = '';
 
+            // Верхняя полоса (6 разных картинок)
             for (let i = 0; i < 6; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'film-frame';
-                frame.style.backgroundImage = `url(${filmFrames[i % filmFrames.length]})`;
+                frame.style.backgroundImage = `url(${filmFrames[i]})`;
                 topStrip.appendChild(frame);
             }
 
-            for (let i = 0; i < 4; i++) {
+            // Левая полоса (5 разных картинок)
+            for (let i = 6; i < 11; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'vertical-frame';
-                frame.style.backgroundImage = `url(${filmFrames[(i + 2) % filmFrames.length]})`;
+                frame.style.backgroundImage = `url(${filmFrames[i]})`;
                 leftStrip.appendChild(frame);
             }
 
-            for (let i = 0; i < 4; i++) {
+            // Правая полоса (5 разных картинок)
+            for (let i = 11; i < 16; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'vertical-frame';
-                frame.style.backgroundImage = `url(${filmFrames[(i + 4) % filmFrames.length]})`;
+                frame.style.backgroundImage = `url(${filmFrames[i]})`;
                 rightStrip.appendChild(frame);
             }
         }
@@ -522,6 +516,7 @@
                         <div class="movie-director">🎬 ${escapeHtml(m.director)}</div>
                         <span class="movie-year">📅 ${m.year}</span>
                         <span class="movie-genre">🎭 ${escapeHtml(m.genre)}</span>
+                        <div class="movie-description">${escapeHtml(m.description || 'Описание отсутствует')}</div>
                         <button class="btn-delete" onclick="event.stopPropagation(); deleteMovie(${m.id})">🗑 Удалить</button>
                     </div>
                 </div>
