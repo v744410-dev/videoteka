@@ -26,7 +26,6 @@
             padding-bottom: 20px;
         }
 
-        /* Верхняя полоса с кадрами */
         .top-film-strip {
             position: fixed;
             top: 0;
@@ -48,7 +47,6 @@
             flex-shrink: 0;
         }
 
-        /* Левая полоса */
         .left-film-strip {
             position: fixed;
             left: 0;
@@ -63,7 +61,6 @@
             overflow: hidden;
         }
 
-        /* Правая полоса */
         .right-film-strip {
             position: fixed;
             right: 0;
@@ -86,7 +83,6 @@
             flex-shrink: 0;
         }
 
-        /* КАДР ИЗ ФИЛЬМА В ПРАВОМ ВЕРХНЕМ УГЛУ (вместо логотипа) */
         .top-right-frame {
             position: fixed;
             top: 10px;
@@ -102,7 +98,6 @@
             background-color: #000;
         }
 
-        /* Основной контент */
         .main-content {
             flex: 1;
             overflow-y: auto;
@@ -127,7 +122,6 @@
             margin-bottom: 10px;
         }
 
-        /* ФОРМА КАК НА СКРИНШОТЕ */
         .add-form {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -143,7 +137,6 @@
             padding-left: 15px;
         }
 
-        /* ДВЕ КОЛОНКИ */
         .form-two-columns {
             display: flex;
             gap: 30px;
@@ -178,7 +171,6 @@
             font-size: 14px;
         }
 
-        /* ОПИСАНИЕ - БОЛЬШОЕ ТЕКСТОВОЕ ПОЛЕ (как на скриншоте) */
         .description-field {
             margin-bottom: 20px;
         }
@@ -233,7 +225,6 @@
             width: 100%;
         }
 
-        /* Поиск */
         .search-section {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -262,7 +253,6 @@
             border-top: 1px solid #eee;
         }
 
-        /* Сетка фильмов */
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -393,16 +383,10 @@
 </head>
 <body>
 
-    <!-- КАДР ИЗ ФИЛЬМА В ПРАВОМ ВЕРХНЕМ УГЛУ -->
     <div class="top-right-frame" style="background-image: url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=150&h=100&fit=crop');"></div>
 
-    <!-- Верхняя полоса с кадрами -->
     <div class="top-film-strip" id="topStrip"></div>
-
-    <!-- Левая полоса -->
     <div class="left-film-strip" id="leftStrip"></div>
-
-    <!-- Правая полоса -->
     <div class="right-film-strip" id="rightStrip"></div>
 
     <div class="page-wrapper">
@@ -413,7 +397,6 @@
                     <p>Справочно-информационная система фильмов</p>
                 </div>
 
-                <!-- ФОРМА КАК НА СКРИНШОТЕ (две колонки + большое поле для описания) -->
                 <div class="add-form">
                     <h2>➕ Добавить фильм</h2>
                     
@@ -451,13 +434,11 @@
                         </div>
                     </div>
 
-                    <!-- ОПИСАНИЕ - БОЛЬШОЕ ПОЛЕ (как на скриншоте) -->
                     <div class="description-field">
                         <label>📝 Описание</label>
                         <textarea id="description" rows="4" placeholder="Краткое описание фильма..."></textarea>
                     </div>
 
-                    <!-- ССЫЛКА НА ПОСТЕР -->
                     <div class="poster-field">
                         <label>🖼️ Ссылка на постер</label>
                         <input type="text" id="poster" placeholder="https://...">
@@ -502,7 +483,6 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-        // 16 РАЗНЫХ КАДРОВ
         const filmFrames = [
             'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',
             'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',
