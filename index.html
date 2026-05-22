@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Видеотека - Кинематографичный дизайн</title>
+    <title>Видеотека - Справочная система</title>
     <style>
         * {
             margin: 0;
@@ -12,81 +12,71 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
 
-        /* Верхняя полоса с кадрами */
+        /* Контейнер с отступами для полос */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding-top: 100px;
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-bottom: 20px;
+        }
+
+        /* Верхняя полоса с кадрами (фиксированная) */
         .top-film-strip {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 120px;
+            height: 100px;
             background: #000;
             display: flex;
-            overflow-x: auto;
             z-index: 100;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             gap: 2px;
-        }
-
-        .top-film-strip::-webkit-scrollbar {
-            height: 4px;
+            overflow: hidden;
         }
 
         .film-frame {
-            min-width: 200px;
-            height: 120px;
+            min-width: 180px;
+            height: 100px;
             background-size: cover;
             background-position: center;
-            position: relative;
-            transition: transform 0.3s;
+            flex-shrink: 0;
         }
 
-        .film-frame:hover {
-            transform: scale(1.05);
-        }
-
-        .film-frame::after {
-            content: "▶";
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            color: white;
-            background: rgba(0,0,0,0.6);
-            padding: 2px 6px;
-            border-radius: 5px;
-            font-size: 10px;
-        }
-
-        /* Левая и правая полосы с кадрами */
+        /* Левая полоса с кадрами (фиксированная) */
         .left-film-strip {
             position: fixed;
             left: 0;
-            top: 120px;
+            top: 100px;
             width: 100px;
-            height: calc(100vh - 120px);
+            height: calc(100vh - 100px);
             background: #000;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
             z-index: 100;
             gap: 2px;
+            overflow: hidden;
         }
 
+        /* Правая полоса с кадрами (фиксированная) */
         .right-film-strip {
             position: fixed;
             right: 0;
-            top: 120px;
+            top: 100px;
             width: 100px;
-            height: calc(100vh - 120px);
+            height: calc(100vh - 100px);
             background: #000;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
             z-index: 100;
             gap: 2px;
+            overflow: hidden;
         }
 
         .vertical-frame {
@@ -94,16 +84,13 @@
             width: 100%;
             background-size: cover;
             background-position: center;
-            transition: transform 0.3s;
+            flex-shrink: 0;
         }
 
-        .vertical-frame:hover {
-            transform: scale(1.05);
-        }
-
-        /* Основной контент */
+        /* Основной контент (оформление как было) */
         .main-content {
-            margin: 140px 110px 20px 110px;
+            flex: 1;
+            overflow-y: auto;
             position: relative;
             z-index: 50;
         }
@@ -117,15 +104,12 @@
             text-align: center;
             color: white;
             margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffd700, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .add-form {
@@ -133,13 +117,13 @@
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .add-form h2 {
             margin-bottom: 20px;
             color: #333;
-            border-left: 4px solid #ffd700;
+            border-left: 4px solid #667eea;
             padding-left: 15px;
         }
 
@@ -164,14 +148,13 @@
         }
 
         .btn-add {
-            background: linear-gradient(135deg, #ffd700, #ff6b6b);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 12px 30px;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            font-weight: bold;
         }
 
         .search-section {
@@ -212,7 +195,7 @@
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.3s;
         }
@@ -272,7 +255,6 @@
             margin-top: 10px;
         }
 
-        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -329,44 +311,46 @@
     <div class="right-film-strip" id="rightStrip"></div>
 
     <!-- Основной контент -->
-    <div class="main-content">
-        <div class="container">
-            <div class="header">
-                <h1>📽️ Видеотека</h1>
-                <p>Справочно-информационная система фильмов</p>
-            </div>
-
-            <div class="add-form">
-                <h2>➕ Добавить фильм</h2>
-                <div class="form-grid">
-                    <input type="text" id="title" placeholder="Название">
-                    <input type="text" id="director" placeholder="Режиссер">
-                    <input type="number" id="year" placeholder="Год">
-                    <select id="genre">
-                        <option>Боевик</option><option>Комедия</option><option>Драма</option>
-                        <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
-                    </select>
-                    <input type="number" id="rating" step="0.1" placeholder="Рейтинг">
+    <div class="page-wrapper">
+        <div class="main-content">
+            <div class="container">
+                <div class="header">
+                    <h1>📽️ Видеотека</h1>
+                    <p>Справочно-информационная система фильмов</p>
                 </div>
-                <textarea id="description" rows="2" placeholder="Описание"></textarea>
-                <input type="text" id="poster" placeholder="Ссылка на постер">
-                <button class="btn-add" onclick="addMovie()">Добавить фильм</button>
-            </div>
 
-            <div class="search-section">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Поиск..." onkeyup="filterMovies()">
-                    <select id="genreFilter" onchange="filterMovies()">
-                        <option value="">Все жанры</option>
-                        <option>Боевик</option><option>Комедия</option><option>Драма</option>
-                        <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
-                    </select>
+                <div class="add-form">
+                    <h2>➕ Добавить фильм</h2>
+                    <div class="form-grid">
+                        <input type="text" id="title" placeholder="Название">
+                        <input type="text" id="director" placeholder="Режиссер">
+                        <input type="number" id="year" placeholder="Год">
+                        <select id="genre">
+                            <option>Боевик</option><option>Комедия</option><option>Драма</option>
+                            <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
+                        </select>
+                        <input type="number" id="rating" step="0.1" placeholder="Рейтинг">
+                    </div>
+                    <textarea id="description" rows="2" placeholder="Описание"></textarea>
+                    <input type="text" id="poster" placeholder="Ссылка на постер">
+                    <button class="btn-add" onclick="addMovie()">Добавить фильм</button>
                 </div>
-                <div class="stats" id="stats">Фильмов: 0</div>
-            </div>
 
-            <div id="moviesContainer" class="movies-grid">
-                <div class="empty-state">🎬 Нет фильмов. Добавьте первый!</div>
+                <div class="search-section">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="🔍 Поиск..." onkeyup="filterMovies()">
+                        <select id="genreFilter" onchange="filterMovies()">
+                            <option value="">Все жанры</option>
+                            <option>Боевик</option><option>Комедия</option><option>Драма</option>
+                            <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
+                        </select>
+                    </div>
+                    <div class="stats" id="stats">Фильмов: 0</div>
+                </div>
+
+                <div id="moviesContainer" class="movies-grid">
+                    <div class="empty-state">🎬 Нет фильмов. Добавьте первый!</div>
+                </div>
             </div>
         </div>
     </div>
@@ -388,47 +372,47 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-        // Кадры из фильмов для фона (бесплатные рабочие ссылки)
+        // 👇 ЗДЕСЬ ВАШИ КАДРЫ (замените на свои ссылки)
         const filmFrames = [
             'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300',
             'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300',
             'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300',
             'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=300',
             'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300',
-            'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=300',
-            'https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?w=300',
-            'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300',
-            'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=300',
-            'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=300'
+            'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=300'
         ];
 
-        // Заполняем полосы кадрами
+        // Заполняем полосы кадрами (без прокрутки, просто фиксированные)
         function initFilmStrips() {
             const topStrip = document.getElementById('topStrip');
             const leftStrip = document.getElementById('leftStrip');
             const rightStrip = document.getElementById('rightStrip');
 
-            // Верхняя полоса (12 кадров)
-            for (let i = 0; i < 12; i++) {
+            topStrip.innerHTML = '';
+            leftStrip.innerHTML = '';
+            rightStrip.innerHTML = '';
+
+            // Верхняя полоса (6 кадров)
+            for (let i = 0; i < 6; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'film-frame';
                 frame.style.backgroundImage = `url(${filmFrames[i % filmFrames.length]})`;
                 topStrip.appendChild(frame);
             }
 
-            // Левая полоса (8 кадров)
-            for (let i = 0; i < 8; i++) {
+            // Левая полоса (4 кадра)
+            for (let i = 0; i < 4; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'vertical-frame';
-                frame.style.backgroundImage = `url(${filmFrames[(i + 3) % filmFrames.length]})`;
+                frame.style.backgroundImage = `url(${filmFrames[(i + 2) % filmFrames.length]})`;
                 leftStrip.appendChild(frame);
             }
 
-            // Правая полоса (8 кадров)
-            for (let i = 0; i < 8; i++) {
+            // Правая полоса (4 кадра)
+            for (let i = 0; i < 4; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'vertical-frame';
-                frame.style.backgroundImage = `url(${filmFrames[(i + 6) % filmFrames.length]})`;
+                frame.style.backgroundImage = `url(${filmFrames[(i + 4) % filmFrames.length]})`;
                 rightStrip.appendChild(frame);
             }
         }
@@ -521,7 +505,7 @@
         }
 
         async function deleteMovie(id) {
-            if (confirm('Удалить?')) {
+            if (confirm('Удалить фильм?')) {
                 await fetch(`${API_URL}/movies/${id}`, {method: 'DELETE'});
                 loadMovies();
             }
