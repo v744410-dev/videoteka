@@ -34,7 +34,7 @@
             background-position: center;
         }
         
-        /* ЛЕВАЯ ПОЛОСА С КАДРАМИ */
+        /* ЛЕВАЯ ПОЛОСА */
         .left-film-strip {
             position: fixed;
             left: 0;
@@ -49,7 +49,7 @@
             overflow: hidden;
         }
         
-        /* ПРАВАЯ ПОЛОСА С КАДРАМИ */
+        /* ПРАВАЯ ПОЛОСА */
         .right-film-strip {
             position: fixed;
             right: 0;
@@ -99,21 +99,15 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        .add-form h2 {
-            margin-bottom: 20px;
-            color: #333;
-            border-left: 4px solid #667eea;
-            padding-left: 15px;
-        }
-        
-        .form-two-columns {
+        /* ДВЕ КОЛОНКИ */
+        .form-row {
             display: flex;
             gap: 30px;
-            flex-wrap: wrap;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
-        .form-left, .form-right {
+        .form-col {
             flex: 1;
             min-width: 200px;
         }
@@ -138,26 +132,30 @@
             font-size: 14px;
         }
         
-        .description-field, .poster-field {
-            margin-bottom: 20px;
+        .full-width {
+            margin-top: 10px;
         }
         
-        .description-field textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .full-width label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
             font-size: 14px;
-            min-height: 100px;
-            font-family: inherit;
         }
         
-        .poster-field input {
+        .full-width textarea, .full-width input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
+        }
+        
+        .full-width textarea {
+            min-height: 100px;
+            font-family: inherit;
+            resize: vertical;
         }
         
         .btn-add {
@@ -169,6 +167,7 @@
             font-size: 16px;
             cursor: pointer;
             width: 100%;
+            margin-top: 20px;
         }
         
         .search-section {
@@ -345,8 +344,12 @@
             <p>Справочно-информационная система фильмов</p>
         </div>
 
-        <!-- ФОРМА ДОБАВЛЕНИЯ (только одна кнопка внизу) -->
-    
+        <!-- ФОРМА ДОБАВЛЕНИЯ (2 СТОЛБИКА) -->
+        <div class="add-form">
+            <!-- ПЕРВАЯ СТРОКА: 2 КОЛОНКИ -->
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="field">
                         <label>🎬 Название</label>
                         <input type="text" id="title" placeholder="Введите название">
                     </div>
@@ -359,7 +362,7 @@
                         <input type="number" id="rating" step="0.1" placeholder="0-10">
                     </div>
                 </div>
-                <div class="form-right">
+                <div class="form-col">
                     <div class="field">
                         <label>🎭 Жанр</label>
                         <select id="genre">
@@ -378,16 +381,19 @@
                 </div>
             </div>
 
-            <div class="description-field">
+            <!-- ОПИСАНИЕ (на всю ширину) -->
+            <div class="full-width">
                 <label>📝 Описание</label>
                 <textarea id="description" rows="4" placeholder="Краткое описание фильма..."></textarea>
             </div>
 
-            <div class="poster-field">
+            <!-- ССЫЛКА НА ПОСТЕР (на всю ширину) -->
+            <div class="full-width">
                 <label>🖼️ Ссылка на постер</label>
                 <input type="text" id="poster" placeholder="https://...">
             </div>
 
+            <!-- КНОПКА -->
             <button class="btn-add" onclick="addMovie()">➕ Добавить фильм</button>
         </div>
 
@@ -432,7 +438,6 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-        // 16 КАДРОВ
         const filmFrames = [
             'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',
             'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',
@@ -452,7 +457,6 @@
             'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13'
         ];
 
-        // Заполняем все полосы
         function initFilmStrips() {
             const topStrip = document.getElementById('topStrip');
             const leftStrip = document.getElementById('leftStrip');
@@ -462,7 +466,6 @@
             leftStrip.innerHTML = '';
             rightStrip.innerHTML = '';
 
-            // Верхняя полоса: 3 разных кадра
             for (let i = 0; i < 3; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'film-frame';
@@ -470,7 +473,6 @@
                 topStrip.appendChild(frame);
             }
 
-            // Левая полоса: 6 кадров
             for (let i = 3; i < 9; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'vertical-frame';
@@ -478,7 +480,6 @@
                 leftStrip.appendChild(frame);
             }
 
-            // Правая полоса: 7 кадров
             for (let i = 9; i < 16; i++) {
                 const frame = document.createElement('div');
                 frame.className = 'vertical-frame';
@@ -493,7 +494,7 @@
                 allMovies = await res.json();
                 filterMovies();
             } catch(e) {
-                document.getElementById('moviesContainer').innerHTML = '<div class="empty-state">❌ Ошибка подключения к серверу</div>';
+                document.getElementById('moviesContainer').innerHTML = '<div class="empty-state">❌ Ошибка подключения</div>';
             }
         }
 
