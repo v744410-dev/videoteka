@@ -134,7 +134,7 @@
         /* Сетка фильмов */
         .movies-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
         }
 
@@ -145,6 +145,7 @@
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
         .movie-card:hover {
@@ -232,6 +233,114 @@
             background: #ff3838;
         }
 
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            position: relative;
+        }
+
+        .modal-poster {
+            width: 100%;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            background-color: #667eea;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            color: white;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .modal-director {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .modal-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .modal-year, .modal-genre, .modal-rating {
+            background: #f0f0f0;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .modal-rating {
+            background: gold;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .modal-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
         .empty-state {
             text-align: center;
             padding: 50px;
@@ -258,7 +367,7 @@
     <div class="container">
         <div class="header">
             <h1>📽️ Видеотека</h1>
-            <p>Справочно-информационная система фильмов с постерами</p>
+            <p>Справочно-информационная система фильмов — нажмите на карточку для просмотра деталей</p>
         </div>
 
         <!-- Форма добавления фильма -->
@@ -304,7 +413,7 @@
                 <input type="text" id="poster" placeholder="https://image.tmdb.org/t/p/w500/......jpg">
             </div>
             <button class="btn-add" onclick="addMovie()">➕ Добавить фильм</button>
-            <div class="info-text">💡 Подсказка: для теста используйте ссылки из интернета. Если оставить пустым — будет цветной фон</div>
+            <div class="info-text">💡 Нажмите на карточку фильма, чтобы открыть подробную информацию</div>
         </div>
 
         <!-- Поиск и фильтрация -->
@@ -339,6 +448,26 @@
                 <span>🎬</span>
                 <p>Нет фильмов в коллекции</p>
                 <p style="font-size: 12px;">Добавьте первый фильм через форму выше</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для детального просмотра -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="modalPoster" class="modal-poster"></div>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <div id="modalDirector" class="modal-director"></div>
+                <div class="modal-info">
+                    <span id="modalYear" class="modal-year"></span>
+                    <span id="modalGenre" class="modal-genre"></span>
+                    <span id="modalRating" class="modal-rating"></span>
+                </div>
+                <p id="modalDescription" class="modal-description"></p>
             </div>
         </div>
     </div>
@@ -414,7 +543,7 @@
             }
             
             container.innerHTML = movies.map(movie => `
-                <div class="movie-card">
+                <div class="movie-card" onclick="openModal(${movie.id})">
                     <div class="movie-poster" style="background-image: url('${movie.poster || ''}'); background-color: ${movie.poster ? '' : '#667eea'}">
                         ${!movie.poster ? '<div style="font-size: 60px; display: flex; align-items: center; justify-content: center; height: 100%;">🎬</div>' : ''}
                         <div class="movie-rating">⭐ ${movie.rating}</div>
@@ -427,10 +556,50 @@
                             <span class="movie-genre">🎭 ${escapeHtml(movie.genre)}</span>
                         </div>
                         <div class="movie-description">${escapeHtml(movie.description || 'Описание отсутствует')}</div>
-                        <button class="btn-delete" onclick="deleteMovie(${movie.id})">🗑 Удалить</button>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteMovie(${movie.id})">🗑 Удалить</button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        // Открыть модальное окно с деталями фильма
+        function openModal(movieId) {
+            const movie = allMovies.find(m => m.id === movieId);
+            if (!movie) return;
+            
+            document.getElementById('modalTitle').textContent = movie.title;
+            document.getElementById('modalDirector').textContent = `🎬 Режиссер: ${movie.director}`;
+            document.getElementById('modalYear').textContent = `📅 ${movie.year}`;
+            document.getElementById('modalGenre').textContent = `🎭 ${movie.genre}`;
+            document.getElementById('modalRating').textContent = `⭐ ${movie.rating}/10`;
+            document.getElementById('modalDescription').textContent = movie.description || 'Описание отсутствует';
+            
+            const posterEl = document.getElementById('modalPoster');
+            if (movie.poster) {
+                posterEl.style.backgroundImage = `url('${movie.poster}')`;
+                posterEl.style.backgroundSize = 'cover';
+                posterEl.style.backgroundPosition = 'center';
+                posterEl.innerHTML = '';
+            } else {
+                posterEl.style.backgroundImage = 'none';
+                posterEl.style.backgroundColor = '#667eea';
+                posterEl.innerHTML = '<div style="font-size: 80px; display: flex; align-items: center; justify-content: center; height: 100%;">🎬</div>';
+            }
+            
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        // Закрыть модальное окно
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Закрыть по клику на фон
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
         }
 
         // Защита от XSS
