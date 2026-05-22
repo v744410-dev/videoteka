@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Видеотека</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        input, button { padding: 8px; margin: 5px; border-radius: 4px; }
+        input { border: 1px solid #ddd; }
+        button { background: #3498db; color: white; border: none; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .delete-btn { background: #e74c3c; }
+        .delete-btn:hover { background: #c0392b; }
+        .movie { border: 1px solid #ddd; margin: 10px 0; padding: 10px; border-radius: 5px; background: #fafafa; }
+        .movie strong { font-size: 18px; color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📽️ Видеотека - Справочная система</h1>
+        
+        <h2>➕ Добавить фильм</h2>
+        <input type="text" id="title" placeholder="Название">
+        <input type="text" id="director" placeholder="Режиссер">
+        <input type="number" id="year" placeholder="Год">
+        <input type="text" id="genre" placeholder="Жанр">
+        <input type="number" id="rating" placeholder="Рейтинг (0-10)" step="0.1">
+        <button onclick="addMovie()">Добавить</button>
+
+        <h2>📋 Список фильмов</h2>
+        <div id="moviesList">Загрузка...</div>
+    </div>
+
+    <script>
+        const API_URL = 'https://videoteka-1.onrender.com';
+        
+        async function loadMovies() {
+            try {
+                const response = await fetch(`${API_URL}/movies`);
+                const movies = await response.json();
+                const container = document.getElementById('moviesList');
+                
+                if (movies.length === 0) {
+                    container.innerHTML = '<p>📭 Фильмов пока нет. Добавьте первый!</p>';
+                    return;
+                }
+                
+                container.innerHTML = movies.map(movie => `
+                    <div class="movie">
+                        <strong>${movie.title}</strong> (${movie.year})<br>
+                        🎬 Режиссер: ${movie.director}<br>
+                        🎭 Жанр: ${movie.genre}<br>
+                        ⭐ Рейтинг: ${movie.rating}/10<br>
+                        <button class="delete-btn" onclick="deleteMovie(${movie.id})">🗑 Удалить</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('moviesList').innerHTML = '<p>❌ Ошибка подключения к серверу</p>';
+            }
+        }
+
+        async function addMovie() {
+            const movie = {
+                title: document.getElementById('title').value,
+                director: document.getElementById('director').value,
+                year: parseInt(document.getElementById('year').value),
+                genre: document.getElementById('genre').value,
+                rating: parseFloat(document.getElementById('rating').value)
+            };
+            
+            if (!movie.title || !movie.director || !movie.year || !movie.genre || !movie.rating) {
+                alert('Заполните все поля!');
+                return;
+            }
+            
+            await fetch(`${API_URL}/movies`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(movie)
+            });
+            
+            // Очищаем поля
+            document.getElementById('title').value = '';
+            document.getElementById('director').value = '';
+            document.getElementById('year').value = '';
+            document.getElementById('genre').value = '';
+            document.getElementById('rating').value = '';
+            
+            loadMovies();
+        }
+
+        async function deleteMovie(id) {
+            if (confirm('Удалить фильм?')) {
+                await fetch(`${API_URL}/movies/${id}`, {method: 'DELETE'});
+                loadMovies();
+            }
+        }
+
+        loadMovies();
+    </script>
+</body>
+</html>
