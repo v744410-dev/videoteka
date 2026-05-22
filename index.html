@@ -1,104 +1,510 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Видеотека</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Видеотека - Справочная система фильмов</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #333; }
-        input, button { padding: 8px; margin: 5px; border-radius: 4px; }
-        input { border: 1px solid #ddd; }
-        button { background: #3498db; color: white; border: none; cursor: pointer; }
-        button:hover { background: #2980b9; }
-        .delete-btn { background: #e74c3c; }
-        .delete-btn:hover { background: #c0392b; }
-        .movie { border: 1px solid #ddd; margin: 10px 0; padding: 10px; border-radius: 5px; background: #fafafa; }
-        .movie strong { font-size: 18px; color: #2c3e50; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Заголовок */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Форма добавления */
+        .add-form {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .add-form h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Поиск и фильтры */
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .search-box input, .search-box select {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .stats {
+            color: #666;
+            font-size: 14px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Сетка фильмов */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* Карточка фильма */
+        .movie-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .movie-poster {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            background-color: #667eea;
+        }
+
+        .movie-rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: gold;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .movie-content {
+            padding: 20px;
+        }
+
+        .movie-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .movie-director {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .movie-year {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        .movie-genre {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .movie-description {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 15px 0;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .btn-delete {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: #ff3838;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 15px;
+            color: #999;
+        }
+
+        .empty-state span {
+            font-size: 50px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📽️ Видеотека - Справочная система</h1>
-        
-        <h2>➕ Добавить фильм</h2>
-        <input type="text" id="title" placeholder="Название">
-        <input type="text" id="director" placeholder="Режиссер">
-        <input type="number" id="year" placeholder="Год">
-        <input type="text" id="genre" placeholder="Жанр">
-        <input type="number" id="rating" placeholder="Рейтинг (0-10)" step="0.1">
-        <button onclick="addMovie()">Добавить</button>
+        <div class="header">
+            <h1>📽️ Видеотека</h1>
+            <p>Справочно-информационная система фильмов с постерами</p>
+        </div>
 
-        <h2>📋 Список фильмов</h2>
-        <div id="moviesList">Загрузка...</div>
+        <!-- Форма добавления фильма -->
+        <div class="add-form">
+            <h2>➕ Добавить новый фильм</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Название *</label>
+                    <input type="text" id="title" placeholder="Введите название">
+                </div>
+                <div class="form-group">
+                    <label>Режиссер *</label>
+                    <input type="text" id="director" placeholder="ФИО режиссера">
+                </div>
+                <div class="form-group">
+                    <label>Год *</label>
+                    <input type="number" id="year" placeholder="Год выпуска">
+                </div>
+                <div class="form-group">
+                    <label>Жанр *</label>
+                    <select id="genre">
+                        <option value="Боевик">Боевик</option>
+                        <option value="Комедия">Комедия</option>
+                        <option value="Драма">Драма</option>
+                        <option value="Фантастика">Фантастика</option>
+                        <option value="Ужасы">Ужасы</option>
+                        <option value="Триллер">Триллер</option>
+                        <option value="Мелодрама">Мелодрама</option>
+                        <option value="Детектив">Детектив</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Рейтинг *</label>
+                    <input type="number" id="rating" step="0.1" min="0" max="10" placeholder="0-10">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>📝 Описание</label>
+                <textarea id="description" rows="2" placeholder="Краткое описание фильма..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>🖼️ Ссылка на постер (URL картинки)</label>
+                <input type="text" id="poster" placeholder="https://image.tmdb.org/t/p/w500/......jpg">
+            </div>
+            <button class="btn-add" onclick="addMovie()">➕ Добавить фильм</button>
+            <div class="info-text">💡 Подсказка: для теста используйте ссылки из интернета. Если оставить пустым — будет цветной фон</div>
+        </div>
+
+        <!-- Поиск и фильтрация -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." onkeyup="filterMovies()">
+                <select id="genreFilter" onchange="filterMovies()">
+                    <option value="">Все жанры</option>
+                    <option value="Боевик">Боевик</option>
+                    <option value="Комедия">Комедия</option>
+                    <option value="Драма">Драма</option>
+                    <option value="Фантастика">Фантастика</option>
+                    <option value="Ужасы">Ужасы</option>
+                    <option value="Триллер">Триллер</option>
+                    <option value="Мелодрама">Мелодрама</option>
+                    <option value="Детектив">Детектив</option>
+                </select>
+                <select id="yearFilter" onchange="filterMovies()">
+                    <option value="">Все года</option>
+                    <option value="2020">2020+</option>
+                    <option value="2010">2010-2019</option>
+                    <option value="2000">2000-2009</option>
+                    <option value="1990">1990-1999</option>
+                </select>
+            </div>
+            <div class="stats" id="stats">Фильмов: 0</div>
+        </div>
+
+        <!-- Список фильмов -->
+        <div id="moviesContainer" class="movies-grid">
+            <div class="empty-state">
+                <span>🎬</span>
+                <p>Нет фильмов в коллекции</p>
+                <p style="font-size: 12px;">Добавьте первый фильм через форму выше</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        const API_URL = 'https://videoteka-1.onrender.com';
+        // ⚠️ ВАЖНО: ЗАМЕНИТЕ НА ВАШУ ССЫЛКУ ИЗ RENDER!
+        const API_URL = 'https://videoteka-api.onrender.com';
         
+        let allMovies = [];
+
+        // Загрузка фильмов
         async function loadMovies() {
             try {
                 const response = await fetch(`${API_URL}/movies`);
-                const movies = await response.json();
-                const container = document.getElementById('moviesList');
-                
-                if (movies.length === 0) {
-                    container.innerHTML = '<p>📭 Фильмов пока нет. Добавьте первый!</p>';
-                    return;
-                }
-                
-                container.innerHTML = movies.map(movie => `
-                    <div class="movie">
-                        <strong>${movie.title}</strong> (${movie.year})<br>
-                        🎬 Режиссер: ${movie.director}<br>
-                        🎭 Жанр: ${movie.genre}<br>
-                        ⭐ Рейтинг: ${movie.rating}/10<br>
-                        <button class="delete-btn" onclick="deleteMovie(${movie.id})">🗑 Удалить</button>
-                    </div>
-                `).join('');
+                allMovies = await response.json();
+                filterMovies();
             } catch (error) {
                 console.error('Ошибка:', error);
-                document.getElementById('moviesList').innerHTML = '<p>❌ Ошибка подключения к серверу</p>';
+                document.getElementById('moviesContainer').innerHTML = `
+                    <div class="empty-state">
+                        <span>⚠️</span>
+                        <p>Ошибка подключения к серверу</p>
+                        <p style="font-size: 12px;">Убедитесь, что бэкенд запущен на Render</p>
+                    </div>
+                `;
             }
         }
 
+        // Фильтрация фильмов
+        function filterMovies() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const genreFilter = document.getElementById('genreFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            let filtered = allMovies.filter(movie => {
+                const matchesSearch = movie.title.toLowerCase().includes(searchTerm);
+                const matchesGenre = !genreFilter || movie.genre === genreFilter;
+                
+                let matchesYear = true;
+                if (yearFilter === '2020') matchesYear = movie.year >= 2020;
+                else if (yearFilter === '2010') matchesYear = movie.year >= 2010 && movie.year <= 2019;
+                else if (yearFilter === '2000') matchesYear = movie.year >= 2000 && movie.year <= 2009;
+                else if (yearFilter === '1990') matchesYear = movie.year >= 1990 && movie.year <= 1999;
+                
+                return matchesSearch && matchesGenre && matchesYear;
+            });
+            
+            updateStats(filtered.length);
+            renderMovies(filtered);
+        }
+
+        // Обновление статистики
+        function updateStats(count) {
+            const statsEl = document.getElementById('stats');
+            if (statsEl) {
+                statsEl.textContent = `📊 Найдено фильмов: ${count} | Всего в базе: ${allMovies.length}`;
+            }
+        }
+
+        // Отображение фильмов
+        function renderMovies(movies) {
+            const container = document.getElementById('moviesContainer');
+            
+            if (movies.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span>🎬</span>
+                        <p>Фильмы не найдены</p>
+                        <p style="font-size: 12px;">Попробуйте изменить параметры поиска</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = movies.map(movie => `
+                <div class="movie-card">
+                    <div class="movie-poster" style="background-image: url('${movie.poster || ''}'); background-color: ${movie.poster ? '' : '#667eea'}">
+                        ${!movie.poster ? '<div style="font-size: 60px; display: flex; align-items: center; justify-content: center; height: 100%;">🎬</div>' : ''}
+                        <div class="movie-rating">⭐ ${movie.rating}</div>
+                    </div>
+                    <div class="movie-content">
+                        <div class="movie-title">${escapeHtml(movie.title)}</div>
+                        <div class="movie-director">🎬 ${escapeHtml(movie.director)}</div>
+                        <div>
+                            <span class="movie-year">📅 ${movie.year}</span>
+                            <span class="movie-genre">🎭 ${escapeHtml(movie.genre)}</span>
+                        </div>
+                        <div class="movie-description">${escapeHtml(movie.description || 'Описание отсутствует')}</div>
+                        <button class="btn-delete" onclick="deleteMovie(${movie.id})">🗑 Удалить</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Защита от XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Добавление фильма
         async function addMovie() {
+            const posterUrl = document.getElementById('poster').value;
+            
             const movie = {
                 title: document.getElementById('title').value,
                 director: document.getElementById('director').value,
                 year: parseInt(document.getElementById('year').value),
                 genre: document.getElementById('genre').value,
-                rating: parseFloat(document.getElementById('rating').value)
+                rating: parseFloat(document.getElementById('rating').value),
+                description: document.getElementById('description').value,
+                poster: posterUrl
             };
             
             if (!movie.title || !movie.director || !movie.year || !movie.genre || !movie.rating) {
-                alert('Заполните все поля!');
+                alert('❌ Заполните все обязательные поля!');
                 return;
             }
             
-            await fetch(`${API_URL}/movies`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(movie)
-            });
+            if (movie.year < 1888 || movie.year > 2026) {
+                alert('❌ Год должен быть от 1888 до 2026');
+                return;
+            }
             
-            // Очищаем поля
-            document.getElementById('title').value = '';
-            document.getElementById('director').value = '';
-            document.getElementById('year').value = '';
-            document.getElementById('genre').value = '';
-            document.getElementById('rating').value = '';
+            if (movie.rating < 0 || movie.rating > 10) {
+                alert('❌ Рейтинг должен быть от 0 до 10');
+                return;
+            }
             
-            loadMovies();
-        }
-
-        async function deleteMovie(id) {
-            if (confirm('Удалить фильм?')) {
-                await fetch(`${API_URL}/movies/${id}`, {method: 'DELETE'});
+            try {
+                await fetch(`${API_URL}/movies`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(movie)
+                });
+                
+                // Очистка формы
+                document.getElementById('title').value = '';
+                document.getElementById('director').value = '';
+                document.getElementById('year').value = '';
+                document.getElementById('genre').value = 'Боевик';
+                document.getElementById('rating').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('poster').value = '';
+                
                 loadMovies();
+            } catch (error) {
+                alert('❌ Ошибка при добавлении фильма');
             }
         }
 
+        // Удаление фильма
+        async function deleteMovie(id) {
+            if (confirm('🗑 Вы уверены, что хотите удалить этот фильм?')) {
+                try {
+                    await fetch(`${API_URL}/movies/${id}`, {method: 'DELETE'});
+                    loadMovies();
+                } catch (error) {
+                    alert('❌ Ошибка при удалении');
+                }
+            }
+        }
+
+        // Загрузка фильмов при открытии
         loadMovies();
     </script>
 </body>
