@@ -86,19 +86,20 @@
             flex-shrink: 0;
         }
 
-        /* КАРТИНКА В ПРАВОМ ВЕРХНЕМ УГЛУ */
-        .top-right-image {
+        /* КАДР ИЗ ФИЛЬМА В ПРАВОМ ВЕРХНЕМ УГЛУ (вместо логотипа) */
+        .top-right-frame {
             position: fixed;
             top: 10px;
             right: 20px;
             z-index: 200;
-            width: 80px;
+            width: 100px;
             height: 80px;
-            border-radius: 15px;
+            border-radius: 10px;
             background-size: cover;
             background-position: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             border: 2px solid rgba(255,255,255,0.5);
+            background-color: #000;
         }
 
         /* Основной контент */
@@ -126,6 +127,7 @@
             margin-bottom: 10px;
         }
 
+        /* ФОРМА КАК НА СКРИНШОТЕ */
         .add-form {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -141,23 +143,34 @@
             padding-left: 15px;
         }
 
-        .form-row {
+        /* ДВЕ КОЛОНКИ */
+        .form-two-columns {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 30px;
+            margin-bottom: 20px;
         }
 
-        .form-row .field {
+        .form-left {
             flex: 1;
-            min-width: 150px;
         }
 
-        .form-row .field-full {
-            width: 100%;
+        .form-right {
+            flex: 1;
         }
 
-        .field input, .field select, .field textarea {
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .field input, .field select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -165,17 +178,48 @@
             font-size: 14px;
         }
 
-        .field textarea {
-            resize: vertical;
-            min-height: 60px;
+        /* ОПИСАНИЕ - БОЛЬШОЕ ТЕКСТОВОЕ ПОЛЕ (как на скриншоте) */
+        .description-field {
+            margin-bottom: 20px;
         }
 
-        .field label {
+        .description-field label {
             display: block;
-            margin-bottom: 5px;
             font-weight: bold;
             color: #555;
-            font-size: 13px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .description-field textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .poster-field {
+            margin-bottom: 20px;
+        }
+
+        .poster-field label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .poster-field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
         .btn-add {
@@ -186,10 +230,10 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
             width: 100%;
         }
 
+        /* Поиск */
         .search-section {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -218,6 +262,7 @@
             border-top: 1px solid #eee;
         }
 
+        /* Сетка фильмов */
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -281,14 +326,12 @@
             margin-right: 5px;
         }
 
-        /* ОПИСАНИЕ ОТДЕЛЬНОЙ СТРОКОЙ (как вы хотели) */
         .movie-description {
             font-size: 13px;
             color: #666;
             margin-top: 12px;
             margin-bottom: 10px;
             line-height: 1.4;
-            clear: both;
         }
 
         .btn-delete {
@@ -350,8 +393,8 @@
 </head>
 <body>
 
-    <!-- КАРТИНКА В ПРАВОМ ВЕРХНЕМ УГЛУ -->
-    <div class="top-right-image" style="background-image: url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=150&h=150&fit=crop');"></div>
+    <!-- КАДР ИЗ ФИЛЬМА В ПРАВОМ ВЕРХНЕМ УГЛУ -->
+    <div class="top-right-frame" style="background-image: url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=150&h=100&fit=crop');"></div>
 
     <!-- Верхняя полоса с кадрами -->
     <div class="top-film-strip" id="topStrip"></div>
@@ -370,50 +413,54 @@
                     <p>Справочно-информационная система фильмов</p>
                 </div>
 
+                <!-- ФОРМА КАК НА СКРИНШОТЕ (две колонки + большое поле для описания) -->
                 <div class="add-form">
                     <h2>➕ Добавить фильм</h2>
                     
-                    <div class="form-row">
-                        <div class="field">
-                            <label>🎬 Название</label>
-                            <input type="text" id="title" placeholder="Введите название">
+                    <div class="form-two-columns">
+                        <div class="form-left">
+                            <div class="field">
+                                <label>🎬 Название</label>
+                                <input type="text" id="title" placeholder="Введите название">
+                            </div>
+                            <div class="field">
+                                <label>🎬 Режиссер</label>
+                                <input type="text" id="director" placeholder="ФИО режиссера">
+                            </div>
+                            <div class="field">
+                                <label>⭐ Рейтинг</label>
+                                <input type="number" id="rating" step="0.1" placeholder="0-10">
+                            </div>
                         </div>
-                        <div class="field">
-                            <label>🎭 Жанр</label>
-                            <select id="genre">
-                                <option>Боевик</option><option>Комедия</option><option>Драма</option>
-                                <option>Фантастика</option><option>Ужасы</option><option>Триллер</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="field">
-                            <label>🎬 Режиссер</label>
-                            <input type="text" id="director" placeholder="ФИО режиссера">
-                        </div>
-                        <div class="field">
-                            <label>📅 Год</label>
-                            <input type="number" id="year" placeholder="Год выпуска">
-                        </div>
-                        <div class="field">
-                            <label>⭐ Рейтинг</label>
-                            <input type="number" id="rating" step="0.1" placeholder="0-10">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="field-full">
-                            <label>📝 Описание</label>
-                            <textarea id="description" rows="3" placeholder="Краткое описание фильма..."></textarea>
+                        <div class="form-right">
+                            <div class="field">
+                                <label>🎭 Жанр</label>
+                                <select id="genre">
+                                    <option>Боевик</option>
+                                    <option>Комедия</option>
+                                    <option>Драма</option>
+                                    <option>Фантастика</option>
+                                    <option>Ужасы</option>
+                                    <option>Триллер</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label>📅 Год</label>
+                                <input type="number" id="year" placeholder="Год выпуска">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="field-full">
-                            <label>🖼️ Ссылка на постер</label>
-                            <input type="text" id="poster" placeholder="https://...">
-                        </div>
+                    <!-- ОПИСАНИЕ - БОЛЬШОЕ ПОЛЕ (как на скриншоте) -->
+                    <div class="description-field">
+                        <label>📝 Описание</label>
+                        <textarea id="description" rows="4" placeholder="Краткое описание фильма..."></textarea>
+                    </div>
+
+                    <!-- ССЫЛКА НА ПОСТЕР -->
+                    <div class="poster-field">
+                        <label>🖼️ Ссылка на постер</label>
+                        <input type="text" id="poster" placeholder="https://...">
                     </div>
 
                     <button class="btn-add" onclick="addMovie()">➕ Добавить фильм</button>
@@ -455,7 +502,7 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-        // 16 РАЗНЫХ КАРТИНОК (для полос)
+        // 16 РАЗНЫХ КАДРОВ
         const filmFrames = [
             'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',
             'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',
