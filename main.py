@@ -1,62 +1,45 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List, Optional
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
-import asyncpg
 
-app = FastAPI(title="Видеотека API", description="Справочная система фильмов")
+app = Flask(__name__)
+CORS(app)
 
-# Разрешаем запросы с любых фронтендов (для курсовой)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Хранилище фильмов (в памяти)
+movies = []
+next_id = 1
 
-# Модель фильма
-class Movie(BaseModel):
-    id: Optional[int] = None
-    title: str
-    director: str
-    year: int
-    genre: str
-    rating: float
-
-# Временно храним данные в памяти (пока нет БД)
-movies_db = []
-counter = 1
-
-@app.get("/")
+@app.route('/')
 def root():
-    return {"message": "Видеотека API работает!", "docs": "/docs"}
+    return {"message": "Видеотека API работает!", "endpoints": ["GET /movies", "POST /movies", "DELETE /movies/<id>"]}
 
-@app.get("/movies", response_model=List[Movie])
+@app.route('/movies', methods=['GET'])
 def get_movies():
-    return movies_db
+    return jsonify(movies)
 
-@app.get("/movies/{movie_id}", response_model=Movie)
-def get_movie(movie_id: int):
-    for movie in movies_db:
-        if movie["id"] == movie_id:
-            return movie
-    raise HTTPException(status_code=404, detail="Фильм не найден")
+@app.route('/movies', methods=['POST'])
+def add_movie():
+    global next_id
+    data = request.json
+    
+    movie = {
+        "id": next_id,
+        "title": data.get('title'),
+        "director": data.get('director'),
+        "year": data.get('year'),
+        "genre": data.get('genre'),
+        "rating": data.get('rating')
+    }
+    movies.append(movie)
+    next_id += 1
+    return jsonify(movie), 201
 
-@app.post("/movies", response_model=Movie)
-def add_movie(movie: Movie):
-    global counter
-    new_movie = movie.dict()
-    new_movie["id"] = counter
-    counter += 1
-    movies_db.append(new_movie)
-    return new_movie
+@app.route('/movies/<int:movie_id>', methods=['DELETE'])
+def delete_movie(movie_id):
+    global movies
+    movies = [m for m in movies if m['id'] != movie_id]
+    return jsonify({"message": "Фильм удален"})
 
-@app.delete("/movies/{movie_id}")
-def delete_movie(movie_id: int):
-    global movies_db
-    for i, movie in enumerate(movies_db):
-        if movie["id"] == movie_id:
-            movies_db.pop(i)
-            return {"message": "Фильм удален"}
-    raise HTTPException(status_code=404, detail="Фильм не найден")
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
