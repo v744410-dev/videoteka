@@ -5,7 +5,6 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Хранилище фильмов
 movies = []
 next_id = 1
 
@@ -21,14 +20,19 @@ def get_movies():
 def add_movie():
     global next_id
     data = request.get_json()
+    
+    # genres приходит как массив, сохраняем как строку через запятую
+    genres_list = data.get('genres', [])
+    genres_str = ', '.join(genres_list) if genres_list else ''
+    
     movie = {
         "id": next_id,
         "title": data.get('title'),
         "director": data.get('director'),
         "year": data.get('year'),
-        "genre": data.get('genre'),
+        "genres": genres_str,  # сохраняем как "Боевик, Драма"
         "rating": data.get('rating'),
-        "description": data.get('description', 'Описание отсутствует'),
+        "description": data.get('description', ''),
         "poster": data.get('poster', '')
     }
     movies.append(movie)
