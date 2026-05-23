@@ -30,7 +30,7 @@ def add_movie():
         "title": data.get('title'),
         "director": data.get('director'),
         "year": data.get('year'),
-        "genres": genres_str,  # сохраняем как "Боевик, Драма"
+        "genres": genres_str,
         "rating": data.get('rating'),
         "description": data.get('description', ''),
         "poster": data.get('poster', '')
