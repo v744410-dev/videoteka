@@ -536,7 +536,7 @@
                             <span class="movie-year">📅 ${m.year}</span>
                             <span class="movie-genre">🎭 ${escapeHtml(m.genres || m.genre || '')}</span>
                         </div>
-                        <div class="movie-description">${escapeHtml(m.description || 'Описание отсутствует')}</div>
+                       <div class="movie-description">${escapeHtml(m.description ? (m.description.length > 100 ? m.description.substring(0, 100) + '...' : m.description) : 'Описание отсутствует')}</div>
                         <button class="btn-delete" onclick="event.stopPropagation(); deleteMovie(${m.id})">🗑 Удалить</button>
                     </div>
                 </div>
