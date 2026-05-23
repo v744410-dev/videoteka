@@ -352,20 +352,35 @@
                     </div>
                 </div>
                 <div class="form-col">
-                    <div class="field">
-                        <label>🎭 Жанр (можно выбрать несколько)</label>
-                        <select id="genre" multiple size="4" style="height: auto; min-height: 100px;">
-                            <option value="Боевик">Боевик</option>
-                            <option value="Комедия">Комедия</option>
-                            <option value="Драма">Драма</option>
-                            <option value="Фантастика">Фантастика</option>
-                            <option value="Ужасы">Ужасы</option>
-                            <option value="Триллер">Триллер</option>
-                            <option value="Мелодрама">Мелодрама</option>
-                            <option value="Детектив">Детектив</option>
-                        </select>
-                        <small style="color: #666;">Для выбора нескольких жанров: зажмите Ctrl (Cmd на Mac) и кликайте</small>
-                    </div>
+         <div class="field">
+    <label>🎭 Жанры (выберите один или несколько)</label>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;">
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Боевик" class="genre-checkbox"> Боевик
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Комедия" class="genre-checkbox"> Комедия
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Драма" class="genre-checkbox"> Драма
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Фантастика" class="genre-checkbox"> Фантастика
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Ужасы" class="genre-checkbox"> Ужасы
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Триллер" class="genre-checkbox"> Триллер
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Мелодрама" class="genre-checkbox"> Мелодрама
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <input type="checkbox" value="Детектив" class="genre-checkbox"> Детектив
+        </label>
+    </div>
+</div>
                     <div class="field">
                         <label>📅 Год</label>
                         <input type="number" id="year" placeholder="Год выпуска">
@@ -548,46 +563,50 @@
             return div.innerHTML;
         }
 
-        async function addMovie() {
-            const genreSelect = document.getElementById('genre');
-            const selectedGenres = Array.from(genreSelect.selectedOptions).map(opt => opt.value);
-            
-            const movie = {
-                title: document.getElementById('title').value,
-                director: document.getElementById('director').value,
-                year: parseInt(document.getElementById('year').value),
-                genres: selectedGenres,
-                rating: parseFloat(document.getElementById('rating').value),
-                description: document.getElementById('description').value,
-                poster: document.getElementById('poster').value
-            };
-            
-            if (!movie.title || !movie.director || !movie.year || !movie.rating) {
-                alert('Заполните все поля!');
-                return;
-            }
-            
-            if (movie.genres.length === 0) {
-                alert('Выберите хотя бы один жанр!');
-                return;
-            }
-            
-            await fetch(`${API_URL}/movies`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(movie)
-            });
-            
-            document.getElementById('title').value = '';
-            document.getElementById('director').value = '';
-            document.getElementById('year').value = '';
-            document.getElementById('rating').value = '';
-            document.getElementById('description').value = '';
-            document.getElementById('poster').value = '';
-            Array.from(genreSelect.options).forEach(opt => opt.selected = false);
-            
-            loadMovies();
-        }
+       async function addMovie() {
+    // Собираем выбранные жанры из чекбоксов
+    const checkboxes = document.querySelectorAll('.genre-checkbox:checked');
+    const selectedGenres = Array.from(checkboxes).map(cb => cb.value);
+    
+    const movie = {
+        title: document.getElementById('title').value,
+        director: document.getElementById('director').value,
+        year: parseInt(document.getElementById('year').value),
+        genres: selectedGenres,
+        rating: parseFloat(document.getElementById('rating').value),
+        description: document.getElementById('description').value,
+        poster: document.getElementById('poster').value
+    };
+    
+    if (!movie.title || !movie.director || !movie.year || !movie.rating) {
+        alert('Заполните все поля!');
+        return;
+    }
+    
+    if (movie.genres.length === 0) {
+        alert('Выберите хотя бы один жанр!');
+        return;
+    }
+    
+    await fetch(`${API_URL}/movies`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(movie)
+    });
+    
+    // Очищаем форму
+    document.getElementById('title').value = '';
+    document.getElementById('director').value = '';
+    document.getElementById('year').value = '';
+    document.getElementById('rating').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('poster').value = '';
+    
+    // Снимаем все галочки с жанров
+    document.querySelectorAll('.genre-checkbox').forEach(cb => cb.checked = false);
+    
+    loadMovies();
+}
 
         async function deleteMovie(id) {
             if (confirm('Удалить фильм?')) {
