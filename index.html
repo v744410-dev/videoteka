@@ -13,7 +13,6 @@
             padding: 120px 120px 20px 120px;
         }
         
-        /* ВЕРХНЯЯ ПОЛОСА С 3 КАДРАМИ */
         .top-film-strip {
             position: fixed;
             top: 0;
@@ -34,7 +33,6 @@
             background-position: center;
         }
         
-        /* ЛЕВАЯ ПОЛОСА */
         .left-film-strip {
             position: fixed;
             left: 0;
@@ -49,7 +47,6 @@
             overflow: hidden;
         }
         
-        /* ПРАВАЯ ПОЛОСА */
         .right-film-strip {
             position: fixed;
             right: 0;
@@ -99,7 +96,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        /* ДВЕ КОЛОНКИ */
         .form-row {
             display: flex;
             gap: 30px;
@@ -329,13 +325,8 @@
 </head>
 <body>
 
-    <!-- ВЕРХНЯЯ ПОЛОСА С 3 КАДРАМИ -->
     <div class="top-film-strip" id="topStrip"></div>
-
-    <!-- ЛЕВАЯ ПОЛОСА -->
     <div class="left-film-strip" id="leftStrip"></div>
-
-    <!-- ПРАВАЯ ПОЛОСА -->
     <div class="right-film-strip" id="rightStrip"></div>
 
     <div class="container">
@@ -344,9 +335,7 @@
             <p>Справочно-информационная система фильмов</p>
         </div>
 
-        <!-- ФОРМА ДОБАВЛЕНИЯ (2 СТОЛБИКА) -->
         <div class="add-form">
-            <!-- ПЕРВАЯ СТРОКА: 2 КОЛОНКИ -->
             <div class="form-row">
                 <div class="form-col">
                     <div class="field">
@@ -363,20 +352,20 @@
                     </div>
                 </div>
                 <div class="form-col">
-                   <div class="field">
-    <label>🎭 Жанр (можно выбрать несколько)</label>
-    <select id="genre" multiple size="4" style="height: auto; min-height: 100px;">
-        <option value="Боевик">Боевик</option>
-        <option value="Комедия">Комедия</option>
-        <option value="Драма">Драма</option>
-        <option value="Фантастика">Фантастика</option>
-        <option value="Ужасы">Ужасы</option>
-        <option value="Триллер">Триллер</option>
-        <option value="Мелодрама">Мелодрама</option>
-        <option value="Детектив">Детектив</option>
-    </select>
-    <small style="color: #666;">Для выбора нескольких жанров: зажмите Ctrl (Cmd на Mac) и кликайте</small>
-</div>
+                    <div class="field">
+                        <label>🎭 Жанр (можно выбрать несколько)</label>
+                        <select id="genre" multiple size="4" style="height: auto; min-height: 100px;">
+                            <option value="Боевик">Боевик</option>
+                            <option value="Комедия">Комедия</option>
+                            <option value="Драма">Драма</option>
+                            <option value="Фантастика">Фантастика</option>
+                            <option value="Ужасы">Ужасы</option>
+                            <option value="Триллер">Триллер</option>
+                            <option value="Мелодрама">Мелодрама</option>
+                            <option value="Детектив">Детектив</option>
+                        </select>
+                        <small style="color: #666;">Для выбора нескольких жанров: зажмите Ctrl (Cmd на Mac) и кликайте</small>
+                    </div>
                     <div class="field">
                         <label>📅 Год</label>
                         <input type="number" id="year" placeholder="Год выпуска">
@@ -384,44 +373,41 @@
                 </div>
             </div>
 
-            <!-- ОПИСАНИЕ (на всю ширину) -->
             <div class="full-width">
                 <label>📝 Описание</label>
                 <textarea id="description" rows="4" placeholder="Краткое описание фильма..."></textarea>
             </div>
 
-            <!-- ССЫЛКА НА ПОСТЕР (на всю ширину) -->
             <div class="full-width">
                 <label>🖼️ Ссылка на постер</label>
                 <input type="text" id="poster" placeholder="https://...">
             </div>
 
-            <!-- КНОПКА -->
             <button class="btn-add" onclick="addMovie()">➕ Добавить фильм</button>
         </div>
 
-        <!-- ПОИСК -->
-        <div class="search-row">
-    <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." onkeyup="filterMovies()">
-    <input type="text" id="searchDirectorInput" placeholder="🎬 Поиск по режиссёру..." onkeyup="filterMovies()">
-    <select id="genreFilter" onchange="filterMovies()">
-        <option value="">Все жанры</option>
-        <option>Боевик</option>
-        <option>Комедия</option>
-        <option>Драма</option>
-        <option>Фантастика</option>
-        <option>Ужасы</option>
-        <option>Триллер</option>
-    </select>
-</div>
+        <div class="search-section">
+            <div class="search-row">
+                <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." onkeyup="filterMovies()">
+                <input type="text" id="searchDirectorInput" placeholder="🎬 Поиск по режиссёру..." onkeyup="filterMovies()">
+                <select id="genreFilter" onchange="filterMovies()">
+                    <option value="">Все жанры</option>
+                    <option>Боевик</option>
+                    <option>Комедия</option>
+                    <option>Драма</option>
+                    <option>Фантастика</option>
+                    <option>Ужасы</option>
+                    <option>Триллер</option>
+                </select>
+            </div>
+            <div class="stats" id="stats">Фильмов: 0</div>
+        </div>
 
-        <!-- СПИСОК ФИЛЬМОВ -->
         <div id="moviesContainer" class="movies-grid">
             <div class="empty-state">🎬 Нет фильмов. Добавьте первый!</div>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО -->
     <div id="modal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div id="modalPoster" class="modal-poster"></div>
@@ -439,31 +425,24 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-     const filmFrames = [
-          'https://avatars.mds.yandex.net/i?id=1f33f3395ee796d2dac5ae305510a1ac768c26dd-12317703-images-thumbs&n=13',  // 14 - иван василич
-          'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',  // 11 - СПРАВА
-           'https://avatars.mds.yandex.net/i?id=b5c523e3b0266dc12d39edb28200e6b47954af66-4011331-images-thumbs&n=13',  // 15 - СПРАВА джентельмены
-  'https://avatars.mds.yandex.net/i?id=0ae8e10a3b6a0dffdd8ce0b8b1c05fc204cb6eba-6696526-images-thumbs&n=13',  // 13 Летер- СПРАВА
-         
-       
-         'https://avatars.mds.yandex.net/i?id=b7eca7f82283c7c7af0f2424db2a2d7e17f912de-5285455-images-thumbs&n=13',  // 1 - НАВЕРХ
-    'https://avatars.mds.yandex.net/i?id=76263f6d51d1aa67ee4c45d3c94417e4127e73e0-5151070-images-thumbs&n=13',  // 2 - СЛЕВА
-    'https://avatars.mds.yandex.net/i?id=d9bdf06741dbedbfee43d7b11f3afade7d5311bb-9837641-images-thumbs&n=13',  // 3 - СЛЕВА
-      
-    
-    'https://avatars.mds.yandex.net/i?id=dd2e873ac46653546fffa698fd2dd518f5f61811-4935575-images-thumbs&n=13',  // 6 - СЛЕВА
-    'https://avatars.mds.yandex.net/i?id=76040f89ff5a5107f6e214b127f1f65defc8117e-7716570-images-thumbs&n=13',  // 7 - СПРАВА
-    'https://avatars.mds.yandex.net/i?id=1b3ea959cae5b2398431e9256a049d728f9308de-3910933-images-thumbs&n=13',  // 8 - СПРАВА
-    'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13',  // 9 - СПРАВА
-         'https://avatars.mds.yandex.net/i?id=831b84b9973950da4fc4998974453ff5e868b73d-5383195-images-thumbs&n=13',  // 5 - с пистолетами
-     'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',  // 10 - маска
-
-    'https://avatars.mds.yandex.net/i?id=623b262a6b221380f876abbe09a4f45c842a8dad-5305065-images-thumbs&n=13',  // 12 - СПРАВА
-      'https://avatars.mds.yandex.net/i?id=b43f7201ae9fbfd12a3e98036be9bb69d0c4beed-10695547-images-thumbs&n=13',  // 4 - СЛЕВА
-    'https://avatars.mds.yandex.net/i?id=ba318a2b7ea7f5e1ddc3b58bc8a75b152980bd32-10931180-images-thumbs&n=13',  // 16 - НАВЕРХ (10)
-];
-    
-
+        const filmFrames = [
+            'https://avatars.mds.yandex.net/i?id=1f33f3395ee796d2dac5ae305510a1ac768c26dd-12317703-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=b5c523e3b0266dc12d39edb28200e6b47954af66-4011331-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=0ae8e10a3b6a0dffdd8ce0b8b1c05fc204cb6eba-6696526-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=b7eca7f82283c7c7af0f2424db2a2d7e17f912de-5285455-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=76263f6d51d1aa67ee4c45d3c94417e4127e73e0-5151070-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=d9bdf06741dbedbfee43d7b11f3afade7d5311bb-9837641-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=dd2e873ac46653546fffa698fd2dd518f5f61811-4935575-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=76040f89ff5a5107f6e214b127f1f65defc8117e-7716570-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=1b3ea959cae5b2398431e9256a049d728f9308de-3910933-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=831b84b9973950da4fc4998974453ff5e868b73d-5383195-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=623b262a6b221380f876abbe09a4f45c842a8dad-5305065-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=b43f7201ae9fbfd12a3e98036be9bb69d0c4beed-10695547-images-thumbs&n=13',
+            'https://avatars.mds.yandex.net/i?id=ba318a2b7ea7f5e1ddc3b58bc8a75b152980bd32-10931180-images-thumbs&n=13'
+        ];
 
         function initFilmStrips() {
             const topStrip = document.getElementById('topStrip');
@@ -505,25 +484,22 @@
                 document.getElementById('moviesContainer').innerHTML = '<div class="empty-state">❌ Ошибка подключения</div>';
             }
         }
-function filterMovies() {
-    const searchTitle = document.getElementById('searchInput').value.toLowerCase();
-    const searchDirector = document.getElementById('searchDirectorInput').value.toLowerCase();
-    const genre = document.getElementById('genreFilter').value;
-    
-    let filtered = allMovies.filter(m => {
-        const matchesTitle = m.title.toLowerCase().includes(searchTitle);
-        const matchesDirector = m.director.toLowerCase().includes(searchDirector);
-        // Проверяем, содержит ли строка жанров выбранный жанр
-        const matchesGenre = !genre || (m.genres && m.genres.includes(genre));
-        return matchesTitle && matchesDirector && matchesGenre;
-    });
-    
-   document.getElementById('modalGenre').innerHTML = m.genres || m.genre || '';
-     renderMovies(filtered);
-}
-   document.getElementById('modalGenre').innerHTML = m.genres || m.genre || '';
-     renderMovies(filtered);
-}
+
+        function filterMovies() {
+            const searchTitle = document.getElementById('searchInput').value.toLowerCase();
+            const searchDirector = document.getElementById('searchDirectorInput').value.toLowerCase();
+            const genre = document.getElementById('genreFilter').value;
+            
+            let filtered = allMovies.filter(m => {
+                const matchesTitle = m.title.toLowerCase().includes(searchTitle);
+                const matchesDirector = m.director.toLowerCase().includes(searchDirector);
+                const matchesGenre = !genre || (m.genres && m.genres.includes(genre));
+                return matchesTitle && matchesDirector && matchesGenre;
+            });
+            
+            document.getElementById('stats').innerHTML = `📊 Найдено: ${filtered.length} | Всего: ${allMovies.length}`;
+            renderMovies(filtered);
+        }
 
         function renderMovies(movies) {
             const container = document.getElementById('moviesContainer');
@@ -556,7 +532,7 @@ function filterMovies() {
             document.getElementById('modalTitle').innerHTML = m.title;
             document.getElementById('modalDirector').innerHTML = `Режиссер: ${m.director}`;
             document.getElementById('modalYear').innerHTML = m.year;
-            document.getElementById('modalGenre').innerHTML = m.genre;
+            document.getElementById('modalGenre').innerHTML = m.genres || m.genre || '';
             document.getElementById('modalRating').innerHTML = m.rating;
             document.getElementById('modalDescription').innerHTML = m.description || 'Описание отсутствует';
             document.getElementById('modalPoster').style.backgroundImage = `url('${m.poster || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300'}')`;
@@ -572,48 +548,47 @@ function filterMovies() {
             return div.innerHTML;
         }
 
-       async function addMovie() {
-    // Получаем выбранные жанры (массив)
-    const genreSelect = document.getElementById('genre');
-    const selectedGenres = Array.from(genreSelect.selectedOptions).map(opt => opt.value);
-    
-    const movie = {
-        title: document.getElementById('title').value,
-        director: document.getElementById('director').value,
-        year: parseInt(document.getElementById('year').value),
-        genres: selectedGenres,  // теперь массив жанров
-        rating: parseFloat(document.getElementById('rating').value),
-        description: document.getElementById('description').value,
-        poster: document.getElementById('poster').value
-    };
-    
-    if (!movie.title || !movie.director || !movie.year || !movie.rating) {
-        alert('Заполните все поля!');
-        return;
-    }
-    
-    if (movie.genres.length === 0) {
-        alert('Выберите хотя бы один жанр!');
-        return;
-    }
-    
-    await fetch(`${API_URL}/movies`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(movie)
-    });
-    
-    document.getElementById('title').value = '';
-    document.getElementById('director').value = '';
-    document.getElementById('year').value = '';
-    document.getElementById('rating').value = '';
-    document.getElementById('description').value = '';
-    document.getElementById('poster').value = '';
-    // Сбрасываем выбор жанров
-    Array.from(genreSelect.options).forEach(opt => opt.selected = false);
-    
-    loadMovies();
-}
+        async function addMovie() {
+            const genreSelect = document.getElementById('genre');
+            const selectedGenres = Array.from(genreSelect.selectedOptions).map(opt => opt.value);
+            
+            const movie = {
+                title: document.getElementById('title').value,
+                director: document.getElementById('director').value,
+                year: parseInt(document.getElementById('year').value),
+                genres: selectedGenres,
+                rating: parseFloat(document.getElementById('rating').value),
+                description: document.getElementById('description').value,
+                poster: document.getElementById('poster').value
+            };
+            
+            if (!movie.title || !movie.director || !movie.year || !movie.rating) {
+                alert('Заполните все поля!');
+                return;
+            }
+            
+            if (movie.genres.length === 0) {
+                alert('Выберите хотя бы один жанр!');
+                return;
+            }
+            
+            await fetch(`${API_URL}/movies`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(movie)
+            });
+            
+            document.getElementById('title').value = '';
+            document.getElementById('director').value = '';
+            document.getElementById('year').value = '';
+            document.getElementById('rating').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('poster').value = '';
+            Array.from(genreSelect.options).forEach(opt => opt.selected = false);
+            
+            loadMovies();
+        }
+
         async function deleteMovie(id) {
             if (confirm('Удалить фильм?')) {
                 await fetch(`${API_URL}/movies/${id}`, {method: 'DELETE'});
