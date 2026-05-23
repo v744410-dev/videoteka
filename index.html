@@ -505,8 +505,7 @@
                 document.getElementById('moviesContainer').innerHTML = '<div class="empty-state">❌ Ошибка подключения</div>';
             }
         }
-
-       function filterMovies() {
+function filterMovies() {
     const searchTitle = document.getElementById('searchInput').value.toLowerCase();
     const searchDirector = document.getElementById('searchDirectorInput').value.toLowerCase();
     const genre = document.getElementById('genreFilter').value;
@@ -514,12 +513,16 @@
     let filtered = allMovies.filter(m => {
         const matchesTitle = m.title.toLowerCase().includes(searchTitle);
         const matchesDirector = m.director.toLowerCase().includes(searchDirector);
-        const matchesGenre = !genre || m.genre === genre;
+        // Проверяем, содержит ли строка жанров выбранный жанр
+        const matchesGenre = !genre || (m.genres && m.genres.includes(genre));
         return matchesTitle && matchesDirector && matchesGenre;
     });
     
-    document.getElementById('stats').innerHTML = `📊 Найдено: ${filtered.length} | Всего: ${allMovies.length}`;
-    renderMovies(filtered);
+   document.getElementById('modalGenre').innerHTML = m.genres || m.genre || '';
+     renderMovies(filtered);
+}
+   document.getElementById('modalGenre').innerHTML = m.genres || m.genre || '';
+     renderMovies(filtered);
 }
 
         function renderMovies(movies) {
@@ -538,7 +541,7 @@
                         <div class="movie-director">🎬 ${escapeHtml(m.director)}</div>
                         <div>
                             <span class="movie-year">📅 ${m.year}</span>
-                            <span class="movie-genre">🎭 ${escapeHtml(m.genre)}</span>
+                            <span class="movie-genre">🎭 ${escapeHtml(m.genres || m.genre || '')}</span>
                         </div>
                         <div class="movie-description">${escapeHtml(m.description || 'Описание отсутствует')}</div>
                         <button class="btn-delete" onclick="event.stopPropagation(); deleteMovie(${m.id})">🗑 Удалить</button>
