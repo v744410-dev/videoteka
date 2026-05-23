@@ -438,25 +438,26 @@
         const API_URL = 'https://videoteka-1.onrender.com';
         let allMovies = [];
 
-      const filmFrames = [
-    'https://avatars.mds.yandex.net/i?id=ba318a2b7ea7f5e1ddc3b58bc8a75b152980bd32-10931180-images-thumbs&n=13',   //ив индекс 15 → ВПРАВО
-     'https://avatars.mds.yandex.net/i?id=623b262a6b221380f876abbe09a4f45c842a8dad-5305065-images-thumbs&n=13',  // индекс 11дд → ВПРАВО
-    'https://avatars.mds.yandex.net/i?id=76040f89ff5a5107f6e214b127f1f65defc8117e-7716570-images-thumbs&n=13',  // индекс 6 → ВЛЕВО
-    'https://avatars.mds.yandex.net/i?id=76263f6d51d1aa67ee4c45d3c94417e4127e73e0-5151070-images-thumbs&n=13',  // индекс 1 → ВЛЕВО
-    'https://avatars.mds.yandex.net/i?id=d9bdf06741dbedbfee43d7b11f3afade7d5311bb-9837641-images-thumbs&n=13',  // индекс 2 → ВЛЕВО
-    'https://avatars.mds.yandex.net/i?id=b43f7201ae9fbfd12a3e98036be9bb69d0c4beed-10695547-images-thumbs&n=13',  // индекс 3 → ВВЕРХ
-    'https://avatars.mds.yandex.net/i?id=831b84b9973950da4fc4998974453ff5e868b73d-5383195-images-thumbs&n=13',  // индекс 4 → ВВЕРХ
-    'https://avatars.mds.yandex.net/i?id=dd2e873ac46653546fffa698fd2dd518f5f61811-4935575-images-thumbs&n=13',  // индекс 5 → ВЛЕВО
-    'https://avatars.mds.yandex.net/i?id=1b3ea959cae5b2398431e9256a049d728f9308de-3910933-images-thumbs&n=13',  // индекс 7 → ВЛЕВО
-    'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13',  // индекс 8 → ВЛЕВО
-    'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',  // индекс 9 → ВПРАВО
-  'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',// индекс 10дд → ВПРАВО
-   'https://avatars.mds.yandex.net/i?id=b7eca7f82283c7c7af0f2424db2a2d7e17f912de-5285455-images-thumbs&n=13',// индекс 0 → ВВЕРХ
-    'https://avatars.mds.yandex.net/i?id=0ae8e10a3b6a0dffdd8ce0b8b1c05fc204cb6eba-6696526-images-thumbs&n=13',  // индекс 12 → ВПРАВО
-    'https://avatars.mds.yandex.net/i?id=1f33f3395ee796d2dac5ae305510a1ac768c26dd-12317703-images-thumbs&n=13',  // индекс 13 → ВПРАВО
-    'https://avatars.mds.yandex.net/i?id=b5c523e3b0266dc12d39edb28200e6b47954af66-4011331-images-thumbs&n=13',  // индекс 14 → ВПРАВО
-    
+     const filmFrames = [
+    'https://avatars.mds.yandex.net/i?id=b7eca7f82283c7c7af0f2424db2a2d7e17f912de-5285455-images-thumbs&n=13',  // 1 - НАВЕРХ
+    'https://avatars.mds.yandex.net/i?id=76263f6d51d1aa67ee4c45d3c94417e4127e73e0-5151070-images-thumbs&n=13',  // 2 - СЛЕВА
+    'https://avatars.mds.yandex.net/i?id=d9bdf06741dbedbfee43d7b11f3afade7d5311bb-9837641-images-thumbs&n=13',  // 3 - СЛЕВА
+    'https://avatars.mds.yandex.net/i?id=b43f7201ae9fbfd12a3e98036be9bb69d0c4beed-10695547-images-thumbs&n=13',  // 4 - СЛЕВА
+    'https://avatars.mds.yandex.net/i?id=831b84b9973950da4fc4998974453ff5e868b73d-5383195-images-thumbs&n=13',  // 5 - СЛЕВА
+    'https://avatars.mds.yandex.net/i?id=dd2e873ac46653546fffa698fd2dd518f5f61811-4935575-images-thumbs&n=13',  // 6 - СЛЕВА
+    'https://avatars.mds.yandex.net/i?id=76040f89ff5a5107f6e214b127f1f65defc8117e-7716570-images-thumbs&n=13',  // 7 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=1b3ea959cae5b2398431e9256a049d728f9308de-3910933-images-thumbs&n=13',  // 8 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=ebd70f0920e686fcd72df676f8870ef9ada7d107-4566903-images-thumbs&n=13',  // 9 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=34a87c98b84a6331e9294911d44a64d454457123-13308716-images-thumbs&n=13',  // 10 - СЛЕВА (или куда хотите)
+    'https://avatars.mds.yandex.net/i?id=ecb7e316b14e0a4378b2f08e1f05e50d2120156e-4740375-images-thumbs&n=13',  // 11 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=623b262a6b221380f876abbe09a4f45c842a8dad-5305065-images-thumbs&n=13',  // 12 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=0ae8e10a3b6a0dffdd8ce0b8b1c05fc204cb6eba-6696526-images-thumbs&n=13',  // 13 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=1f33f3395ee796d2dac5ae305510a1ac768c26dd-12317703-images-thumbs&n=13',  // 14 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=b5c523e3b0266dc12d39edb28200e6b47954af66-4011331-images-thumbs&n=13',  // 15 - СПРАВА
+    'https://avatars.mds.yandex.net/i?id=ba318a2b7ea7f5e1ddc3b58bc8a75b152980bd32-10931180-images-thumbs&n=13'   // 16 - НАВЕРХ (10)
 ];
+    
+
 
         function initFilmStrips() {
             const topStrip = document.getElementById('topStrip');
