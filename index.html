@@ -398,21 +398,19 @@
         </div>
 
         <!-- ПОИСК -->
-        <div class="search-section">
-            <div class="search-row">
-                <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." onkeyup="filterMovies()">
-                <select id="genreFilter" onchange="filterMovies()">
-                    <option value="">Все жанры</option>
-                    <option>Боевик</option>
-                    <option>Комедия</option>
-                    <option>Драма</option>
-                    <option>Фантастика</option>
-                    <option>Ужасы</option>
-                    <option>Триллер</option>
-                </select>
-            </div>
-            <div class="stats" id="stats">Фильмов: 0</div>
-        </div>
+        <div class="search-row">
+    <input type="text" id="searchInput" placeholder="🔍 Поиск по названию..." onkeyup="filterMovies()">
+    <input type="text" id="searchDirectorInput" placeholder="🎬 Поиск по режиссёру..." onkeyup="filterMovies()">
+    <select id="genreFilter" onchange="filterMovies()">
+        <option value="">Все жанры</option>
+        <option>Боевик</option>
+        <option>Комедия</option>
+        <option>Драма</option>
+        <option>Фантастика</option>
+        <option>Ужасы</option>
+        <option>Триллер</option>
+    </select>
+</div>
 
         <!-- СПИСОК ФИЛЬМОВ -->
         <div id="moviesContainer" class="movies-grid">
@@ -505,15 +503,21 @@
             }
         }
 
-        function filterMovies() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const genre = document.getElementById('genreFilter').value;
-            let filtered = allMovies.filter(m => 
-                m.title.toLowerCase().includes(search) && (!genre || m.genre === genre)
-            );
-            document.getElementById('stats').innerHTML = `📊 Найдено: ${filtered.length} | Всего: ${allMovies.length}`;
-            renderMovies(filtered);
-        }
+       function filterMovies() {
+    const searchTitle = document.getElementById('searchInput').value.toLowerCase();
+    const searchDirector = document.getElementById('searchDirectorInput').value.toLowerCase();
+    const genre = document.getElementById('genreFilter').value;
+    
+    let filtered = allMovies.filter(m => {
+        const matchesTitle = m.title.toLowerCase().includes(searchTitle);
+        const matchesDirector = m.director.toLowerCase().includes(searchDirector);
+        const matchesGenre = !genre || m.genre === genre;
+        return matchesTitle && matchesDirector && matchesGenre;
+    });
+    
+    document.getElementById('stats').innerHTML = `📊 Найдено: ${filtered.length} | Всего: ${allMovies.length}`;
+    renderMovies(filtered);
+}
 
         function renderMovies(movies) {
             const container = document.getElementById('moviesContainer');
